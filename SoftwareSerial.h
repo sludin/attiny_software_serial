@@ -1,6 +1,7 @@
 /*
 SoftwareSerial.h (formerly NewSoftSerial.h) - 
-Single-instance software serial library for ATtiny84A, modified from Arduino SoftwareSerial.
+Single-instance software serial library for ATtiny84A and ATtiny85, modified
+from Arduino SoftwareSerial.
 -- Interrupt-driven receive and other improvements by ladyada
    (http://ladyada.net)
 -- Tuning, circular buffer, derivation from class Print/Stream,
@@ -23,6 +24,21 @@ More notes:
  - Error is too high at 57600 (0.64%) and 115200 (2.12%)
  - Ok at 38400 and lower.
  - Still working out how to prevent missing bits when writing characters
+
+-- Port to ATtiny85 by Stephen Ludin ( sludin@ludin.org )
+
+Notes on attiny85 port and updates
+- Added tables for 1Mhz and 8Mhz usage.  1Mhz is mostly useless
+  above 4800
+- Added a mode for calculating the delay table on the fly in software based
+  on comment here: http://forum.arduino.cc/index.php?topic=138497.0. This
+  is the default mode and can be reverted by defining
+  SOFTWARE_SERIAL_TABLE_LOOKUP
+- Added the ability to set the PORT DDR and PIN in a call to a new
+  function softSerialInit.
+- Added the ability to have a transmit only mode ( set rx pin to
+  SOFTWARE_SERIAL_RX_DISABLED )
+- Note that it is necessary to define F_CPU now
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

@@ -268,7 +268,7 @@ uint8_t softSerialBegin(long speed) {
 #ifndef SOFTWARE_SERIAL_TABLE_RX_LOOKUP
 
   long baud = speed;
-  _rx_delay_stopbit = 1000000L/(7 * baud) - 2;
+  _rx_delay_stopbit = F_CPU/(7 * baud) - 2;
   _rx_delay_intrabit = _rx_delay_stopbit;
   _tx_delay = _rx_delay_stopbit - 4;
   _rx_delay_centering = _rx_delay_stopbit/2 - 5;
