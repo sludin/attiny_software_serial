@@ -35,7 +35,10 @@ Notes on attiny85 port and updates
   is the default mode and can be reverted by defining
   SOFTWARE_SERIAL_TABLE_LOOKUP
 - Added the ability to set the PORT DDR and PIN in a call to a new
-  function softSerialInit.
+  function softSerialInit.   It should be noted that this causes
+  the compiler to move from birest addressign to indirect causing the
+  instructions to take a bit more time.  This should not be a factor
+  but it is worth noting.
 - Added the ability to have a transmit only mode ( set rx pin to
   SOFTWARE_SERIAL_RX_DISABLED )
 - Note that it is necessary to define F_CPU now
