@@ -252,7 +252,7 @@ void softSerialInit( volatile uint8_t *ddr,
 
 uint8_t softSerialBegin(long speed) {
 
-  uint8_t rate_not_found = 1;
+  uint8_t error = 1;
   _receive_buffer_head = _receive_buffer_tail = 0;
   _buffer_overflow = false;
 
@@ -268,11 +268,17 @@ uint8_t softSerialBegin(long speed) {
 #ifndef SOFTWARE_SERIAL_TABLE_RX_LOOKUP
 
   long baud = speed;
-  _rx_delay_stopbit = F_CPU/(7 * baud) - 2;
+//  _rx_delay_stopbit = F_CPU/(7 * baud) - 2;
+//  _rx_delay_intrabit = _rx_delay_stopbit;
+//  _tx_delay = _rx_delay_stopbit - 4;
+//  _rx_delay_centering = _rx_delay_stopbit/2 - 5;
+//  rate_not_found = 0;
+
+  _tx_delay = F_CPU/(7 * baud) - 6;
+  _rx_delay_stopbit = _tx_delay + 3;
   _rx_delay_intrabit = _rx_delay_stopbit;
-  _tx_delay = _rx_delay_stopbit - 4;
-  _rx_delay_centering = _rx_delay_stopbit/2 - 5;
-  rate_not_found = 0;
+  _rx_delay_centering = _tx_delay/2 - 5;
+  error = 0;
   
 #else
   
@@ -286,12 +292,12 @@ uint8_t softSerialBegin(long speed) {
       _rx_delay_stopbit = pgm_read_word(&table[i].rx_delay_stopbit);
       _tx_delay = pgm_read_word(&table[i].tx_delay);
 
-      rate_not_found = 0;
+      error = 0;
     }
   }
 #endif
 
-  if ( ! rate_not_found && ! rxpin == SOFTWARE_SERIAL_RX_DISABLED )
+  if ( ! error && ! rxpin == SOFTWARE_SERIAL_RX_DISABLED )
   {
 
 #ifdef PCIE0
@@ -310,7 +316,7 @@ uint8_t softSerialBegin(long speed) {
 
   // No valid rate found
   // Indicate an error
-  return rate_not_found;
+  return error;
 }
 
 void softSerialEnd() {
